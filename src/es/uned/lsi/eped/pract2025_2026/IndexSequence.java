@@ -4,7 +4,7 @@ import es.uned.lsi.eped.DataStructures.IteratorIF;
 import es.uned.lsi.eped.DataStructures.List;
 import es.uned.lsi.eped.DataStructures.ListIF;
 
-// POR HACER
+// HECHA
 public class IndexSequence implements IndexIF {
     protected ListIF<Pair_W_SeqPSF> index;
     @Override

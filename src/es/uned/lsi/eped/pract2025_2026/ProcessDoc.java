@@ -3,7 +3,7 @@ package es.uned.lsi.eped.pract2025_2026;
 
 import es.uned.lsi.eped.DataStructures.IteratorIF;
 
-// POR HACER
+// HECHA
 /* Un objeto de esta clase permite contabilizar la frecuencia
  * de las palabras de un documento.
  */
