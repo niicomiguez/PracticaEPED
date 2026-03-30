@@ -54,6 +54,65 @@ public class IndexTree implements IndexIF {
 
     @Override
     public void insertIndex(String p, String doc_id, int freq) {
+        char[] letras= p.toCharArray();
+        GTreeIF<Node> nodoActual = this.index;
+        for (char letra : letras) {
+            int pos = 1;
+            boolean encontrada = false;
+            boolean pasada = false;
+            IteratorIF<GTreeIF<Node>> it = nodoActual.getChildren().iterator();
+
+            while (it.hasNext() && !encontrada && !pasada) {
+                GTreeIF<Node> hijo = it.getNext();
+                Node contenido = hijo.getRoot();
+
+                if (contenido.getNodeType() == Node.NodeType.INNER) {
+                    char letraNodo = ((NodeInner) contenido).getLetter();
+                    if (letraNodo == letra) {
+                        encontrada = true;
+                    } else if (letraNodo > letra) {
+                        pasada = true;
+                    } else {
+                        pos++;
+                    }
+                } else {
+                    pos++;
+                }
+            }
+
+            if (!encontrada) {
+                GTreeIF<Node> nuevoSub = new GTree<>();
+                nuevoSub.setRoot(new NodeInner(letra));
+                nodoActual.addChild(pos, nuevoSub);
+            }
+
+            nodoActual = nodoActual.getChild(pos);
+        }
+        int posInfo = 1;
+        boolean infoEncontrado = false;
+        IteratorIF<GTreeIF<Node>> itInfo = nodoActual.getChildren().iterator();
+
+        while (itInfo.hasNext() && !infoEncontrado) {
+            GTreeIF<Node> hijoInfo = itInfo.getNext();
+            if (hijoInfo.getRoot().getNodeType() == Node.NodeType.INFO) {
+                infoEncontrado = true;
+                // Si ya existe la palabra, añadimos el doc_id y freq a su lista
+                ((NodeInfo) hijoInfo.getRoot()).getSeqPSR().add(new Pair_S_F(doc_id, freq));
+            } else {
+                posInfo++;
+            }
+        }
+
+        if (!infoEncontrado) {
+            Pair_S_F nuevoPar = new Pair_S_F(doc_id, freq);
+
+            NodeInfo nuevoNodoInfo = new NodeInfo(nuevoPar);
+
+            GTreeIF<Node> ramaInfo = new GTree<>();
+            ramaInfo.setRoot(nuevoNodoInfo);
+
+            nodoActual.addChild(1, ramaInfo);
+        }
 
     }
 
