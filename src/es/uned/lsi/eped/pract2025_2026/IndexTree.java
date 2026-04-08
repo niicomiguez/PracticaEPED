@@ -145,7 +145,7 @@ public class IndexTree implements IndexIF {
             }
         }
 
-
+        explorar(nodoActual, prefix, resultados);
         return resultados.iterator();
     }
     private void explorar(GTreeIF<Node> nodo, String palabraAcumulada, ListIF<Pair_W_SeqPSF> resultados) {
@@ -158,8 +158,10 @@ public class IndexTree implements IndexIF {
             // CASO A: HEMOS ENCONTRADO UNA PALABRA
             if (contenido.getNodeType() == Node.NodeType.INFO) {
                 NodeInfo info = (NodeInfo) contenido;
-                // Guardamos el par (La palabra que llevamos + su lista de capítulos)
-                resultados.insert(new Pair_W_SeqPSF(info.getSeqPSR()).getWord(),palabraAcumulada);
+
+                Pair_W_SeqPSF nuevoPar = new Pair_W_SeqPSF(palabraAcumulada, info.getSeqPSR());
+
+                resultados.insert(1,nuevoPar);
             }
 
             // CASO B: ES UNA LETRA, HAY QUE SEGUIR BAJANDO
