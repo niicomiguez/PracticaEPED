@@ -161,7 +161,7 @@ public class IndexTree implements IndexIF {
 
                 Pair_W_SeqPSF nuevoPar = new Pair_W_SeqPSF(palabraAcumulada, info.getSeqPSR());
 
-                resultados.insert(1,nuevoPar);
+                resultados.insert(resultados.size() + 1, nuevoPar);
             }
 
             // CASO B: ES UNA LETRA, HAY QUE SEGUIR BAJANDO

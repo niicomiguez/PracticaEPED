@@ -22,26 +22,25 @@ public class ProcessDoc {
         return this.words;
     }
 
-    /* Incrementa en 1 la frecuencia de la palabra w en el documento */    
+    /* Incrementa en 1 la frecuencia de la palabra w en el documento */
     public void addWord(String w) {
-        /* Se recorren los pares de palabras con un Iterador */
-        /* Se comparan las palabras con w. True -> incrementar : False -> añadir palabra*/
         IteratorIF<Pair_S_F> it = this.words.iterator();
-        boolean encontrada=false;
+        boolean encontrada = false;
 
+        // 1. Buscamos en toda la secuencia
         while (it.hasNext() && !encontrada){
-            Pair_S_F parActual=it.getNext();
+            Pair_S_F parActual = it.getNext();
 
             if (parActual.getString().equals(w)){
                 parActual.incFrequency();
-                encontrada=true;
-            }
-
-            if (!encontrada){
-                Pair_S_F nuevoPar=new Pair_S_F(w,1);
-                this.words.add(nuevoPar);
+                encontrada = true;
             }
         }
 
+        // 2. SOLO si después de mirar toda la lista no estaba, la añadimos
+        if (!encontrada){
+            Pair_S_F nuevoPar = new Pair_S_F(w, 1);
+            this.words.add(nuevoPar);
+        }
     }
 }

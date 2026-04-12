@@ -7,6 +7,12 @@ import es.uned.lsi.eped.DataStructures.ListIF;
 // HECHA
 public class IndexSequence implements IndexIF {
     protected ListIF<Pair_W_SeqPSF> index;
+
+    public IndexSequence(){
+        this.index=new List<Pair_W_SeqPSF>();
+    }
+
+    // Lista de pares de palabra lugar (capitulo02,12)
     @Override
     public Seq_PSF retrieveIndex(String p) {
         IteratorIF<Pair_W_SeqPSF> it = index.iterator();
@@ -23,6 +29,7 @@ public class IndexSequence implements IndexIF {
         return new Seq_PSF();
     }
 
+    // Insertar índice
     @Override
     public void insertIndex(String p, String doc_id, int freq) {
         IteratorIF<Pair_W_SeqPSF> it = index.iterator();
@@ -56,6 +63,7 @@ public class IndexSequence implements IndexIF {
         }
     }
 
+    // Devuelve iterador de la lista
     @Override
     public IteratorIF<Pair_W_SeqPSF> prefixIterator(String prefix) {
         /* 1. Creamos la lista donde guardaremos los resultados */
