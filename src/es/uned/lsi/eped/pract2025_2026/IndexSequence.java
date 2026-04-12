@@ -12,7 +12,7 @@ public class IndexSequence implements IndexIF {
         this.index=new List<Pair_W_SeqPSF>();
     }
 
-    // Lista de pares de palabra lugar (capitulo02,12)
+    // Lista de pares de palabra,lugar
     @Override
     public Seq_PSF retrieveIndex(String p) {
         IteratorIF<Pair_W_SeqPSF> it = index.iterator();
@@ -21,7 +21,7 @@ public class IndexSequence implements IndexIF {
             if (actual.getWord().equals(p)){
                 return actual.getSeqPSR();
             }
-            // Si actual es mayor alfabéticamente que p entonces break porque está ordenado alfabéeticamente
+            // Si actual es mayor alfabéticamente que p entonces break
             if(actual.getWord().compareTo(p)>0){
                 break;
             }
@@ -42,11 +42,9 @@ public class IndexSequence implements IndexIF {
             int comparacion = actual.getWord().compareTo(p);
 
             if (comparacion == 0) {
-                /* Caso A: La palabra ya existe, actualizamos su secuencia */
                 actual.add(doc_id, freq);
                 encontrada = true;
             } else if (comparacion > 0) {
-                /* Caso B: Hemos pasado el lugar donde debería estar p */
                 Pair_W_SeqPSF nuevo = new Pair_W_SeqPSF(p);
                 nuevo.add(doc_id, freq);
                 index.insert(pos,nuevo);
@@ -55,7 +53,6 @@ public class IndexSequence implements IndexIF {
             pos++;
         }
 
-        /* Caso C: La palabra es mayor que todas las de la lista o la lista está vacía */
         if (!encontrada && !insertada) {
             Pair_W_SeqPSF nuevo = new Pair_W_SeqPSF(p);
             nuevo.add(doc_id, freq);

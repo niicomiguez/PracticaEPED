@@ -67,7 +67,6 @@ public class IndexTree implements IndexIF {
             while (it.hasNext() && !encontrada && !pasada) {
                 GTreeIF<Node> hijo = it.getNext();
                 Node contenido = hijo.getRoot();
-
                 if (contenido.getNodeType() == Node.NodeType.INNER) {
                     char letraNodo = ((NodeInner) contenido).getLetter();
                     if (letraNodo == letra) {
@@ -81,7 +80,6 @@ public class IndexTree implements IndexIF {
                     pos++;
                 }
             }
-
             if (!encontrada) {
                 GTreeIF<Node> nuevoSub = new GTree<>();
                 nuevoSub.setRoot(new NodeInner(letra));
@@ -101,7 +99,6 @@ public class IndexTree implements IndexIF {
                 ((NodeInfo) hijoInfo.getRoot()).getSeqPSR().add(new Pair_S_F(doc_id, freq));
             }
         }
-
         if (!infoEncontrado) {
             Pair_S_F nuevoPar = new Pair_S_F(doc_id, freq);
             NodeInfo nuevoNodoInfo = new NodeInfo(nuevoPar);
@@ -109,7 +106,6 @@ public class IndexTree implements IndexIF {
             ramaInfo.setRoot(nuevoNodoInfo);
             nodoActual.addChild(1, ramaInfo);
         }
-
     }
 
     @Override
