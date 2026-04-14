@@ -4,15 +4,15 @@ import es.uned.lsi.eped.DataStructures.IteratorIF;
 import es.uned.lsi.eped.DataStructures.List;
 import es.uned.lsi.eped.DataStructures.ListIF;
 
-// HECHA
 public class IndexSequence implements IndexIF {
     protected ListIF<Pair_W_SeqPSF> index;
 
+    /* Constructor por defecto crea una lista vacía */
     public IndexSequence(){
         this.index=new List<Pair_W_SeqPSF>();
     }
 
-    // Lista de pares de palabra,lugar
+    /* Devuelve una lista de pares de la palabra indicada por parámetro */
     @Override
     public Seq_PSF retrieveIndex(String p) {
         IteratorIF<Pair_W_SeqPSF> it = index.iterator();
@@ -21,7 +21,8 @@ public class IndexSequence implements IndexIF {
             if (actual.getWord().equals(p)){
                 return actual.getSeqPSR();
             }
-            // Si actual es mayor alfabéticamente que p entonces break
+            /* Poda: al estar la lista ordenada, si la palabra actual
+            es mayor que p, esta no existe */
             if(actual.getWord().compareTo(p)>0){
                 break;
             }
@@ -29,7 +30,7 @@ public class IndexSequence implements IndexIF {
         return new Seq_PSF();
     }
 
-    // Insertar índice
+    /* Inserta una palabra y su frecuencia en el índice manteniendo el orden alfabético */
     @Override
     public void insertIndex(String p, String doc_id, int freq) {
         IteratorIF<Pair_W_SeqPSF> it = index.iterator();
@@ -41,6 +42,9 @@ public class IndexSequence implements IndexIF {
             Pair_W_SeqPSF actual = it.getNext();
             int comparacion = actual.getWord().compareTo(p);
 
+            /* Si encontramos la palabra, actualizamos su frecuencia;
+            si encontramos una mayor, insertamos en esta posición para
+            mantener el orden alfabético */
             if (comparacion == 0) {
                 actual.add(doc_id, freq);
                 encontrada = true;
@@ -53,6 +57,8 @@ public class IndexSequence implements IndexIF {
             pos++;
         }
 
+        /* Si no se encuentra ni ninguna mayor, se inserta en
+        la última posición*/
         if (!encontrada && !insertada) {
             Pair_W_SeqPSF nuevo = new Pair_W_SeqPSF(p);
             nuevo.add(doc_id, freq);
@@ -60,27 +66,25 @@ public class IndexSequence implements IndexIF {
         }
     }
 
-    // Devuelve iterador de la lista
+    /* Devuelve iterador de la lista */
     @Override
     public IteratorIF<Pair_W_SeqPSF> prefixIterator(String prefix) {
-        /* 1. Creamos la lista donde guardaremos los resultados */
         ListIF<Pair_W_SeqPSF> listaResultados = new List<Pair_W_SeqPSF>();
         int posResultados = 1;
 
-        /* 2. Obtenemos el iterador del índice principal */
         IteratorIF<Pair_W_SeqPSF> it = index.iterator();
 
         while (it.hasNext()) {
             Pair_W_SeqPSF actual = it.getNext();
             String palabra = actual.getWord();
 
-            /* 3. Comprobamos si la palabra empieza por el prefijo */
+            /* Si la palabra empieza por el prefijo se inserta el par
+            actual en la lista de resultados con su posición correspondiente*/
             if (palabra.startsWith(prefix)) {
                 listaResultados.insert(posResultados,actual );
                 posResultados++;
             } else if (palabra.compareTo(prefix) > 0) {
-            /* 4. Optimización: si la palabra ya es mayor que el prefijo
-               y no empieza por él, no habrá más coincidencias después */
+            /* Poda: Si la palabra es mayor que el prefijo, este no existirá*/
                 break;
             }
         }

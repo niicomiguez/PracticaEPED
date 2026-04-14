@@ -3,7 +3,6 @@ package es.uned.lsi.eped.pract2025_2026;
 
 import es.uned.lsi.eped.DataStructures.IteratorIF;
 
-// HECHA
 /* Un objeto de esta clase permite contabilizar la frecuencia
  * de las palabras de un documento.
  */
@@ -11,7 +10,7 @@ public class ProcessDoc {
     String doc_id;
     Seq_PSF words;
 
-    /* Constructor */
+    /* Constructor por defecto crea una secuencia vacía */
     public ProcessDoc(String did) {
         this.doc_id = did;
         this.words = new Seq_PSF();
@@ -22,12 +21,12 @@ public class ProcessDoc {
         return this.words;
     }
 
-    /* Incrementa en 1 la frecuencia de la palabra w en el documento */
+    /* Incrementa en 1 la frecuencia de la palabra w en el documento si existe */
     public void addWord(String w) {
         IteratorIF<Pair_S_F> it = this.words.iterator();
         boolean encontrada = false;
 
-        // 1. Buscamos en toda la secuencia
+        /* Buscamos la palabra en la secuencia actual del documento */
         while (it.hasNext() && !encontrada){
             Pair_S_F parActual = it.getNext();
 
@@ -37,7 +36,7 @@ public class ProcessDoc {
             }
         }
 
-        // 2. SOLO si después de mirar toda la lista no estaba, la añadimos
+        /* Si la palabra no existía en el documento, se crea un nuevo par con frecuencia 1 */
         if (!encontrada){
             Pair_S_F nuevoPar = new Pair_S_F(w, 1);
             this.words.add(nuevoPar);

@@ -5,12 +5,11 @@ import es.uned.lsi.eped.DataStructures.List;
 import es.uned.lsi.eped.DataStructures.ListIF;
 import es.uned.lsi.eped.DataStructures.SequenceIF;
 
-// HECHA
 public class Seq_PSF {
     /* Lista para almacenar los pares <cadena,frencuencia>*/
     private List<Pair_S_F> seqStringFreq;
-    
-    /* Constructor */
+
+    /* Constructor por defecto crea una lista vacía */
     public Seq_PSF() {
         this.seqStringFreq= new List<>();
     }

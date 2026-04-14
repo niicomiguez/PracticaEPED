@@ -2,35 +2,41 @@ package es.uned.lsi.eped.pract2025_2026;
 
 import es.uned.lsi.eped.DataStructures.*;
 
-// POR HACER
 public class IndexTree implements IndexIF {
 
     protected GTreeIF<Node> index;
 
+    /* Constructor por defecto crea un árbol vacío */
     public IndexTree(){
         this.index = new GTree<>();
         Node contenidoRaiz = new NodeRoot();
         this.index.setRoot(contenidoRaiz);
     }
 
+    /* Devuelve una lista de pares de la palabra indicada por parámetro */
     @Override
     public Seq_PSF retrieveIndex(String p) {
         if(p==null || p.isEmpty()) return new Seq_PSF();
         char[] letras= p.toCharArray();
-        // Variable auxiliar para no perder la raíz actual
+
+        /* Variable auxiliar para no perder la raíz actual*/
         GTreeIF<Node> nodoActual = this.index;
+
+        /* Buscamos nivel a nivel cada carácter de la palabra */
         for (char letra: letras){
             boolean encontrada=false;
             IteratorIF<GTreeIF<Node>> it= nodoActual.getChildren().iterator();
             while (it.hasNext() && !encontrada){
                 GTreeIF<Node> hijo = it.getNext();
                 Node contenido = hijo.getRoot();
+                /* Comprobamos si el nodo hijo corresponde a la letra buscada */
                 if (contenido.getNodeType()== Node.NodeType.INNER){
                     char letraNodo =((NodeInner) contenido).getLetter();
                     if (letraNodo==letra){
                         nodoActual=hijo;
                         encontrada=true;
                     }else if(letraNodo>letra){
+                        /* Poda: al estar los hijos ordenados, si pasamos la letra, no existe */
                         return new Seq_PSF();
                     }
                 }
@@ -39,6 +45,7 @@ public class IndexTree implements IndexIF {
                 return new Seq_PSF();
             }
         }
+        /* Una vez recorrida la palabra, buscamos el nodo de información (INFO) asociado */
         IteratorIF<GTreeIF<Node>> itHijos = nodoActual.getChildren().iterator();
 
         while (itHijos.hasNext()) {
@@ -53,6 +60,7 @@ public class IndexTree implements IndexIF {
         return new Seq_PSF();
     }
 
+    /* Inserta una palabra en el árbol manteniendo el orden alfabético de los hijos */
     @Override
     public void insertIndex(String p, String doc_id, int freq) {
         if(p==null || p.isEmpty()) return;
@@ -64,6 +72,7 @@ public class IndexTree implements IndexIF {
             boolean pasada = false;
             IteratorIF<GTreeIF<Node>> it = nodoActual.getChildren().iterator();
 
+            /* Localizamos la posición de inserción para mantener el orden de los hijos */
             while (it.hasNext() && !encontrada && !pasada) {
                 GTreeIF<Node> hijo = it.getNext();
                 Node contenido = hijo.getRoot();
@@ -80,6 +89,7 @@ public class IndexTree implements IndexIF {
                     pos++;
                 }
             }
+            /* Si la letra no existe en este nivel, creamos un nuevo nodo intermedio */
             if (!encontrada) {
                 GTreeIF<Node> nuevoSub = new GTree<>();
                 nuevoSub.setRoot(new NodeInner(letra));
@@ -95,10 +105,11 @@ public class IndexTree implements IndexIF {
             GTreeIF<Node> hijoInfo = itInfo.getNext();
             if (hijoInfo.getRoot().getNodeType() == Node.NodeType.INFO) {
                 infoEncontrado = true;
-                // Si ya existe la palabra, añadimos el doc_id y freq a su lista
+                /* Si ya existe la palabra, añadimos el doc_id y freq a su lista*/
                 ((NodeInfo) hijoInfo.getRoot()).getSeqPSR().add(new Pair_S_F(doc_id, freq));
             }
         }
+        /* Si la palabra es nueva, insertamos el nodo INFO al inicio de los hijos */
         if (!infoEncontrado) {
             Pair_S_F nuevoPar = new Pair_S_F(doc_id, freq);
             NodeInfo nuevoNodoInfo = new NodeInfo(nuevoPar);
@@ -108,6 +119,7 @@ public class IndexTree implements IndexIF {
         }
     }
 
+    /* Genera un iterador de palabras que comienzan por el prefijo dado */
     @Override
     public IteratorIF<Pair_W_SeqPSF> prefixIterator(String prefix) {
         ListIF<Pair_W_SeqPSF> resultados = new List<>();
@@ -117,6 +129,7 @@ public class IndexTree implements IndexIF {
         GTreeIF<Node> nodoActual = this.index;
         char[] palabraFragmentada = prefix.toCharArray();
 
+        /* Bajamos por el árbol hasta encontrar el nodo final del prefijo */
         for (char letra : palabraFragmentada) {
             IteratorIF<GTreeIF<Node>> it = nodoActual.getChildren().iterator();
             boolean encontrada = false;
@@ -141,9 +154,12 @@ public class IndexTree implements IndexIF {
             }
         }
 
+        /* Iniciamos el recorrido recursivo para recolectar todas las palabras */
         explorar(nodoActual, prefix, resultados);
         return resultados.iterator();
     }
+
+    /* Método recursivo para recorrer el subárbol en preorden y recuperar las palabras */
     private void explorar(GTreeIF<Node> nodo, String palabraAcumulada, ListIF<Pair_W_SeqPSF> resultados) {
         IteratorIF<GTreeIF<Node>> it = nodo.getChildren().iterator();
 
@@ -151,7 +167,7 @@ public class IndexTree implements IndexIF {
             GTreeIF<Node> hijo = it.getNext();
             Node contenido = hijo.getRoot();
 
-            // CASO A: HEMOS ENCONTRADO UNA PALABRA
+            /* Si es un nodo INFO, hemos completado una palabra válida */
             if (contenido.getNodeType() == Node.NodeType.INFO) {
                 NodeInfo info = (NodeInfo) contenido;
 
@@ -160,10 +176,10 @@ public class IndexTree implements IndexIF {
                 resultados.insert(resultados.size() + 1, nuevoPar);
             }
 
-            // CASO B: ES UNA LETRA, HAY QUE SEGUIR BAJANDO
+            /* Si es un nodo INNER, seguimos descendiendo por la rama */
             else if (contenido.getNodeType() == Node.NodeType.INNER) {
                 NodeInner inner = (NodeInner) contenido;
-                // Llamada recursiva: pasamos el hijo y le sumamos su letra a la palabra
+                /* Llamada recursiva: pasamos el hijo y le sumamos su letra a la palabra*/
                 explorar(hijo, palabraAcumulada + inner.getLetter(), resultados);
             }
         }
