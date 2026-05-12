@@ -81,6 +81,43 @@ public class Ex23_24 {
         }
         return false;
     }
+
+    // 2 a
+    // Se usarín dos pilas, una para cada acción Undo y Redo.
+    // El motivo es que cuando queremos, por ejemplo, rehacer una acción,
+    // queremos obtener la última acción antes de esa. Entonces solamente la Pila
+    // nos permite obtener el último elemento insertado debido a ser la única
+    // estructura de las estudiadas LIFO, pudiendo hacer esto con el método
+    // getTop de las pilas.
+    // Luego la opción redo es lo mismo entonces Pila también
+
+    // b
+    Stack<String> stackUndo =new Stack<>();
+    Stack<String> stackRedo =new Stack<>();
+
+    public void hacerAccion(String accionNueva) {
+        stackUndo.push(accionNueva);
+
+        while (!stackRedo.isEmpty()) {
+            stackRedo.pop();
+        }
+    }
+    public void undo() {
+        if (!stackUndo.isEmpty()) {
+            String accionARevertir = stackUndo.getTop();
+            stackUndo.pop();
+            stackRedo.push(accionARevertir);
+        }
+    }
+    public void redo(){
+        if(!stackRedo.isEmpty()){
+            String accionARehacer = stackRedo.getTop();
+            stackRedo.pop();
+
+            stackUndo.push(accionARehacer);
+        }
+    }
+
     public static void main(String[] args) {
 
     }
