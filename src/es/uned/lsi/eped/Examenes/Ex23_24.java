@@ -5,6 +5,8 @@ import es.uned.lsi.eped.DataStructures.List;
 import es.uned.lsi.eped.DataStructures.ListIF;
 import es.uned.lsi.eped.DataStructures.Stack;
 
+import java.net.Inet4Address;
+
 public class Ex23_24 {
 
     // 1
@@ -60,6 +62,25 @@ public class Ex23_24 {
     /*public boolean check(String s){
 
     }*/
+
+    // 2 sem jun-----------------------------------------------
+    // 1
+    // Este método no hay que codificalo, también se podría
+    // hacerse con contains() no ahorra coste pero es mas simple
+    // entonces la mejor estrucutura seria un árbol con un AVL
+    public boolean repetidos(ListIF<Integer> numeros){
+        IteratorIF<Integer> it= numeros.iterator();
+        ListIF<Integer> listaContadores= new List<>();
+        while (it.hasNext()){
+            int actual=it.getNext();
+            int contadorActual=listaContadores.get(actual);
+            if(contadorActual>=1){
+                return true;
+            }
+            listaContadores.insert(actual, contadorActual+1);
+        }
+        return false;
+    }
     public static void main(String[] args) {
 
     }
