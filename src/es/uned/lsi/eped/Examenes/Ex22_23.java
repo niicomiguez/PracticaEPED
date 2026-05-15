@@ -1,8 +1,6 @@
 package es.uned.lsi.eped.Examenes;
 
-import es.uned.lsi.eped.DataStructures.IteratorIF;
-import es.uned.lsi.eped.DataStructures.Queue;
-import es.uned.lsi.eped.DataStructures.Stack;
+import es.uned.lsi.eped.DataStructures.*;
 
 public class Ex22_23 {
     // APARTADO 2 a) - ALGORITMO DE DESPLAZAMIENTO EFICIENTE EN LISTAS ENLAZADAS
@@ -76,6 +74,51 @@ public class Ex22_23 {
 
     // 2 sem 22/23
     // el ejercicio 2 es literalmente el de desplazar las listas de antes
+
+    // Sept 22/23-------------------------------------------------------
+    //2
+    public void removeKButton(StackIF<String> s,int k){
+        StackIF<String> aux=new Stack<>();
+        int borrar=(s.size()+1)-k;
+        int contador=1;
+
+        while(!s.isEmpty()){
+            String elemento = s.getTop();
+            s.pop();
+            if (contador < borrar) {
+                aux.push(elemento);
+            }
+            contador++;
+        }
+        while (!aux.isEmpty()){
+            String top= aux.getTop();
+            s.push(top);
+            aux.pop();
+        }
+    }
+
+    // 3
+    public boolean isAVL (BTreeIF<Integer> bt) {
+        if (bt.isEmpty()) {
+            return true;
+        }
+
+        BTreeIF<Integer> izq = bt.getLeftChild();
+        BTreeIF<Integer> der = bt.getRightChild();
+
+        if (!izq.isEmpty() && izq.getRoot() >= bt.getRoot()) return false;
+        if (!der.isEmpty() && der.getRoot() <= bt.getRoot()) return false;
+
+        int hIzq = izq.isEmpty() ? 0 : izq.getHeight();
+        int hDer = der.isEmpty() ? 0 : der.getHeight();
+
+        int diferencia = hIzq - hDer;
+        if (diferencia != 0 && diferencia != 1 && diferencia != -1) {
+            return false;
+        }
+
+        return isAVL(izq) && isAVL(der);
+    }
     public static void main(String[] args) {
 
     }
